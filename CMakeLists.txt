@@ -297,13 +297,15 @@ set(SOURCE_FILE_LIST
 get_absolute_path_list(SOURCE_FILE_LIST SOURCE_FILE_LIST_)
 set(SOURCE_FILE_LIST ${SOURCE_FILE_LIST_})
 
-add_library(dobby SHARED
-  ${SOURCE_FILE_LIST}
-  )
+# patched: SHARED 库已移除（注入场景只需要静态库编进主 so，
+# 避免 APK 里出现冗余 libdobby.so / 注入时额外 so 依赖）
+# add_library(dobby SHARED
+#   ${SOURCE_FILE_LIST}
+#   )
 
-target_include_directories(dobby PUBLIC
-  include
-  )
+# target_include_directories(dobby PUBLIC
+#   include
+#   )
 
 # ---
 
@@ -321,20 +323,20 @@ set_target_properties(dobby_static
 
 # ---
 
-set_target_properties(dobby
-  PROPERTIES
-  LINK_FLAGS "${linker_flags}"
-  COMPILE_FLAGS "${compiler_flags}"
-  )
+# set_target_properties(dobby
+#   PROPERTIES
+#   LINK_FLAGS "${linker_flags}"
+#   COMPILE_FLAGS "${compiler_flags}"
+#   )
 
 set_target_properties(dobby_static
   PROPERTIES
   COMPILE_FLAGS "${compiler_flags}"
   )
 
-target_compile_definitions(dobby PRIVATE
-  "COMPILE_DEFINITIONS ${compile_definitions}"
-  )
+# target_compile_definitions(dobby PRIVATE
+#   "COMPILE_DEFINITIONS ${compile_definitions}"
+#   )
 target_compile_definitions(dobby_static PRIVATE
   "COMPILE_DEFINITIONS ${compile_definitions}"
   )
@@ -348,12 +350,12 @@ endif ()
 # ---
 
 if (SYSTEM.Android)
-  target_link_libraries(dobby log)
+  # target_link_libraries(dobby log)
   if (PROCESSOR.ARM)
-    set_target_properties(dobby
-      PROPERTIES
-      ANDROID_ARM_MODE arm
-      )
+    # set_target_properties(dobby
+    #   PROPERTIES
+    #   ANDROID_ARM_MODE arm
+    #   )
     set_target_properties(dobby_static
       PROPERTIES
       ANDROID_ARM_MODE arm
@@ -361,9 +363,9 @@ if (SYSTEM.Android)
   endif ()
 endif ()
 
-if (SYSTEM.Linux)
-  target_link_libraries(dobby dl)
-endif ()
+# if (SYSTEM.Linux)
+#   target_link_libraries(dobby dl)
+# endif ()
 
 # ---
 
